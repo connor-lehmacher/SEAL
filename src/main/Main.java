@@ -141,23 +141,15 @@ class PointDraw extends JPanel {
 	    Random rn = new Random();
 	    
 	    int k = 0;
-	    while (k < 1000){    
+	    while (k < 500000){    
 		    g.setColor(shades[k % 7]);
 		    
 		    int v = rn.nextInt(3);
 		    int t = rn.nextInt(6);
 		    
-		    if (t == 0) {
-		    	guy.turnLeft();
-		    } else if (t == 1) {
-		    	guy.turnRight();
-		    }
+		   	guy.turn(t == 0);
 		    
-		    if (v == 0) {
-		    	guy.moveForward();
-		    } else if (v == 1) {
-		    	guy.moveBackward();
-		    }
+		  	guy.move(v == 0);
 		    
 		    printCritter(g, guy.location);
 		    

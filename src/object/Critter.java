@@ -13,7 +13,7 @@ public class Critter extends Object {
 	public ArrayList<Critter> critters = new ArrayList<Critter>();
 	
 	//To be stored in critter's Memory
-	public double energy;
+	public int energy;
 	public int direction;
 	public int size;
 	
@@ -28,43 +28,34 @@ public class Critter extends Object {
 	}
 	
 	public void charge(){
-	energy += super.l.light;
+		energy += 1; 
 	}
 	
-	public boolean moveForward(){
-		Hex n = this.l.neighbors[direction];
-		
+	public boolean move(boolean dir){
+		Hex n = null;
+		if(dir) {
+			n = this.l.neighbors[direction];
+		} if(!dir){
+			n = this.l.neighbors[(direction + 3) % 6];
+		}
+		energy -= 3 * size;
 		if (n == null) {
+			System.out.println("Hello");
 			return false;
 		}
-		
-		location.move(direction);
+
+		location.move((direction + (dir ? 0 : 3)) % 6);
 		hexChange(n);
 		
-		energy -= 3 * size;
 		return true;
 	}
 		
-	public boolean moveBackward(){
-		Hex n = this.l.neighbors[(direction + 3) % 6];
-		
-		if (n == null) {
-			return false;
+	public void turn(boolean dir){
+		if(dir) {
+			direction = (direction + 5) % 6;
+		} else {
+			direction = (direction + 1) % 6;
 		}
-		
-		location.move((direction + 3) % 6);
-		hexChange(n);
-		
-		energy -= 3 * size;
-		return true;
-	}
-		
-	public void turnLeft(){
-		direction = (direction + 5) % 6;
-	}
-		
-	public void turnRight(){
-		direction = (direction + 1) % 6;
 	}
 	
 	public int sense(int dire, int dist) {
