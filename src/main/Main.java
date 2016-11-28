@@ -4,59 +4,85 @@ package main;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Polygon;
+import java.util.ArrayList;
+import java.util.Random;
 
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 
-import math.Matrix2D;
-import math.Point;
+import math.*;
+import environment.*;
+import object.*;
 
 
 public class Main {
-	public static int width = 10, height = 10;
-	public static Point[] points = new Point[15];
+	public static int width = 50, height = 68, tileWidth = 17;
 	public static Matrix2D defMat;
+	public static ArrayList<Hex> board = new ArrayList<Hex>();
+	public static Critter guy;
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		
-		double[][] m = {{Math.sqrt(3)/2, 0},
-						{-0.5, 1}};
+		defMat = new Matrix2D(new double[][]{{Math.sqrt(3)/2, 	0},
+											 {-0.5, 			1}});
 		
-		defMat = new Matrix2D(m);
-
-
-		points[0] = new Point(100, 100);
-		points[1] = new Point(100, 200);
-		points[2] = new Point(100, 300);
-		points[3] = new Point(200, 200);
-		points[4] = new Point(200, 300);
-		points[5] = new Point(200, 400);
-		points[6] = new Point(300, 200);
-		points[7] = new Point(300, 300);
-		points[8] = new Point(300, 400);
-		points[9] = new Point(400, 300);
-		points[10] = new Point(400, 400);
-		points[11] = new Point(0, 0);
-		points[12] = new Point(0, 100);
-		points[13] = new Point(0, 200);
-		points[14] = new Point(0, 300);
+		//Board initializer
+		Point end = defMat.transMat(width * tileWidth, height * tileWidth);
+		
+		int i = 0;
+		while (i < height * tileWidth) {
+			
+			int j = 0;
+			Point a = defMat.transMat(j, i);
+			
+			while (a.x >= 0 && j < width * tileWidth) {
+				
+				if (a.y >= 0 && a.y < end.y) {
+					board.add(new Hex(new Point(j, i), false));
+				}
+				
+				j += tileWidth;
+				a = defMat.transMat(j, i);
+			}
+			i += tileWidth;
+		}
+		
+		//Finds and stores neighbors
+		for(Hex l : board) {
+			for (Hex k : board) {
+				double dx = l.location.x - k.location.x;
+				double dy = l.location.y - k.location.y;
+				
+				if (l != k && dx * dy >= 0) {
+					if (dx * dx + dy * dy <= 2.1 * tileWidth * tileWidth) {
+						l.getNeighbor(k);
+					}
+				}
+				
+			}
+			
+		}
+		
+		int s = board.size();
+		int r = (int)(Math.sqrt(s) + s) / 2;
 		
 		
+		guy = new Critter(0, 0, board.get(r));
 		
-		printPoints(points);
+		printPoints(board);
 	}
 	
-	public static void printPoints(Point[] points) {
+	public static void printPoints(ArrayList<Hex> board) {
 		JPanel content = new JPanel();
-        PointDraw newrect= new PointDraw(points, defMat);
+        PointDraw newrect= new PointDraw(board, defMat, guy);
         content.add(newrect);
         JFrame window = new JFrame("GUI Test");
         window.setContentPane(content);
-        window.setSize(500, 600);
+        window.setSize(1200, 810);
         window.setVisible(true);
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
@@ -66,63 +92,119 @@ public class Main {
 
 class PointDraw extends JPanel {
 	
-	Point[] ptp;
+	public static int tileWidth = 17;
+
+
+	double r3 = Math.sqrt(3) - 0.1;
+	double m = tileWidth / (r3);
+
+
+	//Stored points of the polygon (hexagon) printed over every tile
+    int[] xPoints = {(int)m, 
+    				 (int)(0.5 * m),
+    				 (int)(-0.5 * m), 
+    				 (int)(-m), 
+    				 (int)(-0.5 * m), 
+    				 (int)(0.5 * m)};
+    
+    int[] yPoints = {0, 
+    				 (int)(r3 * m * 0.5), 
+    				 (int)(r3 * m * 0.5), 
+    				 0, 
+    				 (int)(-r3 * m * 0.5), 
+    				 (int)(-r3 * m * 0.5)};
+    
+    Polygon p = new Polygon(xPoints, yPoints, 6);
+    
+	ArrayList<Hex> board;
 	Matrix2D matrix;
+	Critter guy;
 	
-	public PointDraw(Point[] ps, Matrix2D m) {
-		ptp = ps;
+	public PointDraw(ArrayList<Hex> b, Matrix2D m, Critter c) {
+		board = b;
 		matrix = m;
+		guy = c;
 	}
 	
 	protected void paintComponent(Graphics g) {
+		
 	    super.paintComponent(g);
+	    
+	    Color[] shades = {Color.RED,
+	    				  Color.ORANGE,
+	    				  Color.YELLOW,
+	    				  Color.GREEN,
+	    				  Color.CYAN,
+	    				  Color.BLUE,
+	    				  Color.MAGENTA};
+	    
+	    Random rn = new Random();
+	    
+	    int k = 0;
+	    while (k < 1000){    
+		    g.setColor(shades[k % 7]);
+		    
+		    int v = rn.nextInt(3);
+		    int t = rn.nextInt(6);
+		    
+		    if (t == 0) {
+		    	guy.turnLeft();
+		    } else if (t == 1) {
+		    	guy.turnRight();
+		    }
+		    
+		    if (v == 0) {
+		    	guy.moveForward();
+		    } else if (v == 1) {
+		    	guy.moveBackward();
+		    }
+		    
+		    printCritter(g, guy.location);
+		    
+			k++;
+		}
+
+
 	    g.setColor(Color.BLUE);
-	    
-	    int i = 0;
-	    while (i < ptp.length) {
-	    	if (ptp[i] != null) {
-	    		
-	    		System.out.println(i + ":   " + ptp[i].x + ", " + ptp[i].y);
-	    		
-	    	    printPoint(g, ptp[i]);
-	    	}
-	    	i++;
+	    for (Hex l: board) {
+	    	printTile(g, l.location);
 	    }
-
-
-	    Point a = new Point(300, 300);
-	    g.setColor(Color.GREEN);
-	    printPoint(g, a);
-	    
-	    a.move(5);
-	    g.setColor(Color.YELLOW);
-	    printPoint(g, a);
-	    
-	    a.move(3);
-	    g.setColor(Color.ORANGE);
-	    printPoint(g, a);
-	    
-	    a.move(4);
-	    g.setColor(Color.RED);
-	    printPoint(g, a);
-	    
-	    a.move(5);
-	    g.setColor(Color.MAGENTA);
-	    printPoint(g, a);
-	    
-	    
 	}
 	
-	public void printPoint(Graphics g, Point p) {
+	/**Graphically prints un critter
+	 * Give critter's computational location
+	 * 
+	 * @param g - Graphics object
+	 * @param p - Point location of the tile (COMPUTATIONAL)
+	 */
+	public void printCritter(Graphics g, Point p) {
 		
 		Point a = matrix.transMat(p);
-		g.fillRect((int)a.x, (int)(500 - a.y), 10, 10);
+		
+		this.p.translate((int)a.x + tileWidth, 750 - (int)a.y);
+		g.fillPolygon(this.p);
+		this.p.translate((int)-a.x - tileWidth, (int)a.y - 750);
+		
+	}
+	
+	/**Graphically prints un tile
+	 * 
+	 * @param g - Graphics object
+	 * @param p - Point location of the tile
+	 */
+	public void printTile(Graphics g, Point p) {
+		
+		Point a = matrix.transMat(p);
+		
+		this.p.translate((int)a.x + tileWidth, 750 - (int)a.y);
+		g.drawPolygon(this.p);
+		this.p.translate((int)-a.x - tileWidth, (int)a.y - 750);
 		
 	}
 
 
 	public Dimension getPreferredSize() {
-		return new Dimension(500, 600); // appropriate constants
+		return new Dimension(810, 810); // appropriate constants
 	}
 }
 

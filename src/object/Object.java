@@ -1,11 +1,20 @@
 package object;
 
-import environment.Hex;
+
+import environment.*;
+
 
 public class Object {
 	public Hex l;
+	public Object(Hex h) {
+		l = h;
+	}
 	
-	public Object(Hex l) {
+	/**Changes an Object's Hex location
+	 * 
+	 * @param l - the Object's new Hex Location
+	 */
+	public void hexChange(Hex l) {
 		this.l = l;
 	}
 }

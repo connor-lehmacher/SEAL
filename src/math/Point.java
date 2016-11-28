@@ -19,7 +19,7 @@ public class Point {
 	
 	public void move(int hexDirection) {
 		
-		int MOVE_UNIT = 100;
+		int MOVE_UNIT = 17;
 
 
 		x += MOVE_UNIT * (((hexDirection + 1) % 3) - 1) * (2 * (hexDirection % 2) - 1);
@@ -28,7 +28,10 @@ public class Point {
 	}
 	
 	
+	
 }
+
+
 
 
 
