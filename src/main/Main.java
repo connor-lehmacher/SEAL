@@ -1,5 +1,6 @@
 package main;
 
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -8,6 +9,10 @@ import java.awt.Graphics;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+
+
+import math.Matrix2D;
+import math.Point;
 
 
 public class Main {
@@ -24,33 +29,26 @@ public class Main {
 		defMat = new Matrix2D(m);
 
 
-		points[0] = defMat.transMat((new Point(100, 100)));
-		points[1] = defMat.transMat((new Point(100, 200)));
-		points[2] = defMat.transMat((new Point(100, 300)));
-		points[3] = defMat.transMat((new Point(200, 200)));
-		points[4] = defMat.transMat((new Point(200, 300)));
-		points[5] = defMat.transMat((new Point(200, 400)));
-		points[6] = defMat.transMat((new Point(300, 200)));
-		points[7] = defMat.transMat((new Point(300, 300)));
-		points[8] = defMat.transMat((new Point(300, 400)));
-		points[9] = defMat.transMat((new Point(400, 300)));
-		points[10] = defMat.transMat((new Point(400, 400)));
-		points[11] = defMat.transMat((new Point(0, 0)));
-		points[12] = defMat.transMat((new Point(0, 100)));
-		points[13] = defMat.transMat((new Point(0, 200)));
-		points[14] = defMat.transMat((new Point(0, 300)));
+		points[0] = new Point(100, 100);
+		points[1] = new Point(100, 200);
+		points[2] = new Point(100, 300);
+		points[3] = new Point(200, 200);
+		points[4] = new Point(200, 300);
+		points[5] = new Point(200, 400);
+		points[6] = new Point(300, 200);
+		points[7] = new Point(300, 300);
+		points[8] = new Point(300, 400);
+		points[9] = new Point(400, 300);
+		points[10] = new Point(400, 400);
+		points[11] = new Point(0, 0);
+		points[12] = new Point(0, 100);
+		points[13] = new Point(0, 200);
+		points[14] = new Point(0, 300);
 		
 		
 		
 		printPoints(points);
 	}
-	
-	
-	
-	
-	
-	
-	
 	
 	public static void printPoints(Point[] points) {
 		JPanel content = new JPanel();
@@ -86,33 +84,40 @@ class PointDraw extends JPanel {
 	    		
 	    		System.out.println(i + ":   " + ptp[i].x + ", " + ptp[i].y);
 	    		
-	    		g.fillRect((int)ptp[i].x, (int)(500 - ptp[i].y), 10, 10);
+	    	    printPoint(g, ptp[i]);
 	    	}
 	    	i++;
 	    }
 
 
-	    Point a = matrix.transMat(new Point(300, 300));
+	    Point a = new Point(300, 300);
 	    g.setColor(Color.GREEN);
-	    g.fillRect((int)a.x, (int)(500 - a.y), 10, 10);
+	    printPoint(g, a);
 	    
-	    a.move(5, matrix);
+	    a.move(5);
 	    g.setColor(Color.YELLOW);
-	    g.fillRect((int)a.x, (int)(500 - a.y), 10, 10);
+	    printPoint(g, a);
 	    
-	    a.move(3, matrix);
+	    a.move(3);
 	    g.setColor(Color.ORANGE);
-	    g.fillRect((int)a.x, (int)(500 - a.y), 10, 10);
+	    printPoint(g, a);
 	    
-	    a.move(4, matrix);
+	    a.move(4);
 	    g.setColor(Color.RED);
-	    g.fillRect((int)a.x, (int)(500 - a.y), 10, 10);
+	    printPoint(g, a);
 	    
-	    a.move(5, matrix);
+	    a.move(5);
 	    g.setColor(Color.MAGENTA);
-	    g.fillRect((int)a.x, (int)(500 - a.y), 10, 10);
+	    printPoint(g, a);
 	    
 	    
+	}
+	
+	public void printPoint(Graphics g, Point p) {
+		
+		Point a = matrix.transMat(p);
+		g.fillRect((int)a.x, (int)(500 - a.y), 10, 10);
+		
 	}
 
 
@@ -120,3 +125,7 @@ class PointDraw extends JPanel {
 		return new Dimension(500, 600); // appropriate constants
 	}
 }
+
+
+
+
