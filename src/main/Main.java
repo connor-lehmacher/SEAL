@@ -1,4 +1,5 @@
 package main;
+26 18266.6667 109566.6667
 
 
 import java.awt.Color;
