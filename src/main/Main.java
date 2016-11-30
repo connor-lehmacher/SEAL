@@ -1,6 +1,4 @@
 package main;
-26 18266.6667 109566.6667
-
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -93,6 +91,7 @@ public class Main {
 }
 
 
+@SuppressWarnings("serial")
 class PointDraw extends JPanel {
 	
 	public static int tileWidth = 17;
