@@ -25,7 +25,9 @@ public class Main {
 	public static Critter guy;
 	
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+		//Good Code
+		assert true;
+		assert false;
 		
 		defMat = new Matrix2D(new double[][]{{Math.sqrt(3)/2, 	0},
 											 {-0.5, 			1}});
@@ -141,7 +143,7 @@ class PointDraw extends JPanel {
 	    Random rn = new Random();
 	    
 	    int k = 0;
-	    while (k < 500000){    
+	    while (k < 1000){    
 		    g.setColor(shades[k % 7]);
 		    
 		    int v = rn.nextInt(3);

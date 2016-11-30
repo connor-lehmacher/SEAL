@@ -39,15 +39,12 @@ public class Critter extends Object {
 			n = this.l.neighbors[(direction + 3) % 6];
 		}
 		energy -= 3 * size;
-		if (n == null) {
-			System.out.println("Hello");
-			return false;
+		if (n != null) {
+			location.move((direction + (dir ? 0 : 3)) % 6);
+			hexChange(n);
 		}
 
-		location.move((direction + (dir ? 0 : 3)) % 6);
-		hexChange(n);
-		
-		return true;
+		return (n != null);
 	}
 		
 	public void turn(boolean dir){
