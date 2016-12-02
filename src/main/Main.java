@@ -69,7 +69,7 @@ public class Main {
 		int r = (int)(Math.sqrt(s) + s) / 2;
 		
 		
-		guy = new Critter(0, 0, board.get(r), 1, 1, null);
+		guy = new Critter(0, board.get(r), 1, 1, null);
 		
 		printPoints(board);
 	}

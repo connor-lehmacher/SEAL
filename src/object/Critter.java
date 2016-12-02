@@ -32,15 +32,22 @@ public class Critter extends Object {
 	public int direction; 
 
 
-	public Critter(int energy, int direction, Hex location, int defence, int offense, int[] extraInfo){
+	public Critter(int direction, Hex location, int defence, int offense, int[] extraInfo){
 		super(location);
-		this.energy = energy;
+		this.energy = 250;
 		this.direction = direction;
 		this.location = new Point(location.location.x, location.location.y);
 		size = 1;
 		tag = 0;
 		posture = 0;
-		memory = 8 + extraInfo.length;
+		int mem;
+		try{
+			mem = 8 + extraInfo.length;
+		}
+		catch(NullPointerException e){
+			mem = 8;
+		}
+		memory = mem;
 		this.defence = defence;
 		this.offense = offense;
 		generalPurposeMemory = extraInfo ;
@@ -63,7 +70,6 @@ public class Critter extends Object {
 		}
 		energy -= 3 * size;
 		if (n == null) {
-			System.out.println("Hello");
 			return false;
 		}
 
@@ -139,6 +145,21 @@ public class Critter extends Object {
 		return true;
 	}
 	
+	public boolean bud() {
+		if (energy <= complexity() * 9) {
+			return false;
+		}
+		
+		if (sense(direction, 1) != 0) {
+			return false;
+		}
+		
+		l.neighbors[(direction + 3) % 6].fill(new Critter(direction, l.neighbors[(direction + 3) % 6], defence, offense, generalPurposeMemory));
+		
+		
+		return true;
+	}
+	
 	public int sense(int dire, int dist) {
 		
 		Hex check = this.l;
@@ -166,7 +187,62 @@ public class Critter extends Object {
 		return 0;
 	}
 
+	public int senseAppearance(int dire, int dist) {
+		Hex check = this.l;
+		
+		int i = 0;
+		while (i < dist) {
+			check = check.neighbors[dire];
+			i++;
+		}
+		
+		Object fv = check.getFillVal();
+		if (fv == null) {
+			return 0;
+		}
+		if (check.rockHex) {
+			return -1;
+		}
+		if (fv instanceof Critter) {
+			//Stuff
+		}
+		if (fv instanceof Food) {
+			return 0; 
+		}
+		
+		return 0;
+	}
+	
+	public int random(int i) {
+		return (int)(Math.random() * i);
+	}
+		
+	public int complexity(){
+		return 1; //Temporary
+	}
 
+	public int getMem(int i) {
+		switch(i) {
+		case 0:
+			return memory;
+		case 1:
+			return defence;
+		case 2:
+			return offense;
+		case 3:
+			return size;
+		case 4:
+			return energy;
+		case 5:
+			return passNumber;
+		case 6:
+			return tag;
+		case 7:
+			return posture;
+		default:
+			return generalPurposeMemory[i - 8];
+		}
+	}
 }
 
 
