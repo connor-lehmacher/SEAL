@@ -24,9 +24,6 @@ public class Main {
 	public static Critter guy;
 	
 	public static void main(String[] args) {
-		//Good Code
-		assert true;
-		assert false;
 		
 		defMat = new Matrix2D(new double[][]{{Math.sqrt(3)/2, 	0},
 											 {-0.5, 			1}});
@@ -72,7 +69,7 @@ public class Main {
 		int r = (int)(Math.sqrt(s) + s) / 2;
 		
 		
-		guy = new Critter(0, 0, board.get(r));
+		guy = new Critter(0, 0, board.get(r), 1, 1, null);
 		
 		printPoints(board);
 	}

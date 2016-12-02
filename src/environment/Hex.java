@@ -44,7 +44,13 @@ public class Hex {
 	 * @param fill
 	 */
 	public void fill(Object fill) {
+		isFilled = true;
+		if (fill == null) {
+			isFilled = false;
+		}
 		fillVal = fill;
+
+
 	}
 	
 	
